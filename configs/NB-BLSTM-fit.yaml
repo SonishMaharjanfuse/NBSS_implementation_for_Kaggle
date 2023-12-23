@@ -37,32 +37,34 @@ model:
   exp_name: exp
   metrics: [SDR, SI_SDR, NB_PESQ, WB_PESQ]
 data:
-  clean_speech_dataset: wsj0-mix
-  clean_speech_dir: /dev/shm/quancs/
-  rir_dir: /dev/shm/quancs/rir_cfg_4
-  speech_overlap_ratio:
-    - 0.1
-    - 1.0
-  speech_scale:
-    - -5.0
-    - 5.0
-  batch_size:
-    - 15
-    - 15
-  speaker_num: 2
-  audio_time_len:
-    - headtail 4
-    - headtail 4
-    - headtail 4
-  num_workers: 15
-  test_set: test
-  shuffle_train_rir: true
-  seeds:
-    train: null
-    val: 2
-    test: 3
-  pin_memory: true
-  prefetch_factor: 5
+  class_path: data_loaders.SS_SemiOnlineDataModule
+  init_args:
+    clean_speech_dataset: wsj0
+    clean_speech_dir: /kaggle/input/wsj0-2mix/
+    rir_dir: /kaggle/input/nbss-data/NBSS/dataset/rir_cfg_4
+    speech_overlap_ratio:
+      - 0.1
+      - 1.0
+    speech_scale:
+      - -5.0
+      - 5.0
+    batch_size:
+      - 15
+      - 15
+    speaker_num: 2
+    audio_time_len:
+      - headtail 4
+      - headtail 4
+      - headtail 4
+    num_workers: 15
+    test_set: test
+    shuffle_train_rir: true
+    seeds:
+      train: null
+      val: 2
+      test: 3
+    pin_memory: true
+    prefetch_factor: 5
 early_stopping:
   monitor: val/neg_si_sdr
   min_delta: 0.01
@@ -91,6 +93,6 @@ model_checkpoint:
 learning_rate_monitor:
   logging_interval: epoch
   log_momentum: false
-model_summary:
-  max_depth: -1
+# model_summary:
+#   max_depth: -1
 ckpt_path: null
