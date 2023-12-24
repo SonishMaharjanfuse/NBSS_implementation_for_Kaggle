@@ -1,0 +1,10 @@
+NBSS(
+  (io): TimeDomainSignalNB()
+  (arch): BLSTM2_FC1(
+    (blstm1): LSTM(16, 256, batch_first=True, bidirectional=True)
+    (blstm2): LSTM(512, 128, batch_first=True, bidirectional=True)
+    (linear): Linear(in_features=256, out_features=4, bias=True)
+  )
+)
+
+
