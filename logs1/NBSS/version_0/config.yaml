@@ -1,0 +1,134 @@
+# pytorch_lightning==2.1.2
+seed_everything: 2
+trainer:
+  accelerator: auto
+  strategy: ddp_find_unused_parameters_false
+  devices: 0,
+  num_nodes: 1
+  precision: 32
+  logger: null
+  callbacks: null
+  fast_dev_run: false
+  max_epochs: 5
+  min_epochs: null
+  max_steps: -1
+  min_steps: null
+  max_time: null
+  limit_train_batches: null
+  limit_val_batches: null
+  limit_test_batches: null
+  limit_predict_batches: null
+  overfit_batches: 0.0
+  val_check_interval: null
+  check_val_every_n_epoch: 1
+  num_sanity_val_steps: null
+  log_every_n_steps: null
+  enable_checkpointing: null
+  enable_progress_bar: null
+  enable_model_summary: null
+  accumulate_grad_batches: 1
+  gradient_clip_val: 5
+  gradient_clip_algorithm: norm
+  deterministic: null
+  benchmark: null
+  inference_mode: true
+  use_distributed_sampler: true
+  profiler: null
+  detect_anomaly: false
+  barebones: false
+  plugins: null
+  sync_batchnorm: false
+  reload_dataloaders_every_n_epochs: 0
+  default_root_dir: null
+model:
+  arch:
+    class_path: models.arch.NBC2.NBC2
+    init_args:
+      n_layers: 8
+      encoder_kernel_size: 5
+      dim_hidden: 96
+      dim_ffn: 192
+      block_kwargs:
+        n_heads: 2
+        dropout: 0
+        conv_kernel_size: 3
+        n_conv_groups: 8
+        norms:
+        - LN
+        - GBN
+        - GBN
+        group_batch_norm_kwargs:
+          group_size: 257
+          share_along_sequence_dim: false
+  io:
+    class_path: models.io.TimeDomainSignalNB
+    init_args:
+      ft_len: 512
+      ft_overlap: 256
+      loss_func: models.io.narrow_band.td_signal_nb.neg_si_sdr
+      loss_name: null
+  speaker_num: 2
+  ref_channel: 0
+  channels:
+  - 0
+  - 1
+  - 2
+  - 3
+  - 4
+  - 5
+  - 6
+  - 7
+  learning_rate: 0.001
+  optimizer: Adam
+  optimizer_kwargs: {}
+  lr_scheduler: ExponentialLR
+  lr_scheduler_kwargs:
+    gamma: 0.99
+  exp_name: exp
+  metrics:
+  - SDR
+  - SI_SDR
+  - NB_PESQ
+  - WB_PESQ
+early_stopping:
+  monitor: val/neg_si_sdr
+  min_delta: 0.05
+  patience: 30
+  verbose: false
+  mode: min
+  strict: true
+  check_finite: true
+  stopping_threshold: null
+  divergence_threshold: null
+  check_on_train_epoch_end: null
+  log_rank_zero_only: false
+ckpt_path: null
+data:
+  class_path: data_loaders.SS_SemiOnlineDataModule
+  init_args:
+    clean_speech_dataset: wsj0
+    clean_speech_dir: /kaggle/input/wsj0-2mix/
+    rir_dir: /kaggle/input/nbss-data/NBSS/dataset/rir_cfg_4
+    speech_overlap_ratio:
+    - 0.1
+    - 1.0
+    speech_scale:
+    - -5.0
+    - 5.0
+    batch_size:
+    - 1
+    - 1
+    speaker_num: 2
+    audio_time_len:
+    - nmix 4
+    - nmix 4
+    - nmix 4
+    num_workers: 5
+    test_set: test
+    shuffle_train_rir: true
+    seeds:
+      train: null
+      val: 2
+      test: 3
+    pin_memory: true
+    prefetch_factor: 5

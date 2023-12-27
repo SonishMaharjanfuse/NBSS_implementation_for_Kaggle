@@ -1,0 +1,23 @@
+speaker_num: 2
+ref_channel: 0
+channels:
+- 0
+- 1
+- 2
+- 3
+- 4
+- 5
+- 6
+- 7
+learning_rate: 0.001
+optimizer: Adam
+optimizer_kwargs: {}
+lr_scheduler: ExponentialLR
+lr_scheduler_kwargs:
+  gamma: 0.99
+exp_name: exp
+metrics:
+- SDR
+- SI_SDR
+- NB_PESQ
+- WB_PESQ

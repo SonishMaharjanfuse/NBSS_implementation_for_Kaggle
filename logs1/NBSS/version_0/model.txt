@@ -1,0 +1,33 @@
+NBSS(
+  (io): TimeDomainSignalNB()
+  (arch): NBC2(
+    (encoder): Conv1d(16, 96, kernel_size=(5,), stride=(1,), padding=same)
+    (sa_layers): ModuleList(
+      (0-7): 8 x NBC2Block(
+        (norm1): LayerNorm((96,), eps=1e-05, elementwise_affine=True)
+        (self_attn): MultiheadAttention(
+          (out_proj): NonDynamicallyQuantizableLinear(in_features=96, out_features=96, bias=True)
+        )
+        (dropout1): Dropout(p=0, inplace=False)
+        (norm2): GroupBatchNorm(96, 257, share_along_sequence_dim=False, transpose=False, eps=1e-05, affine=True)
+        (linear1): Linear(in_features=96, out_features=192, bias=True)
+        (conv): Sequential(
+          (0): SiLU()
+          (1): Conv1d(192, 192, kernel_size=(3,), stride=(1,), padding=same, groups=8)
+          (2): SiLU()
+          (3): Conv1d(192, 192, kernel_size=(3,), stride=(1,), padding=same, groups=8)
+          (4): GroupBatchNorm(192, 257, share_along_sequence_dim=False, transpose=True, eps=1e-05, affine=True)
+          (5): SiLU()
+          (6): Conv1d(192, 192, kernel_size=(3,), stride=(1,), padding=same, groups=8)
+          (7): SiLU()
+          (8): Dropout(p=0, inplace=False)
+        )
+        (linear2): Linear(in_features=192, out_features=96, bias=True)
+        (dropout2): Dropout(p=0, inplace=False)
+      )
+    )
+    (decoder): Linear(in_features=96, out_features=4, bias=True)
+  )
+)
+
+
