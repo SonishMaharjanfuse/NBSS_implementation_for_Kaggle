@@ -157,7 +157,7 @@ def find_random_vertical_vectors(vec: np.ndarray) -> Tuple[np.ndarray, np.ndarra
     return v1t, v1tv
 
 
-def generate_rir_cfg_list(spk_num=2,
+def generate_rir_cfg_list(spk_num=5,
                           xlim=[3, 8],
                           ylim=[3, 8],
                           zlim=[3, 4],
