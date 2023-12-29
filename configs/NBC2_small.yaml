@@ -44,7 +44,7 @@ data:
   init_args:
     clean_speech_dataset: wsj0
     clean_speech_dir: /kaggle/input/wsj0-2mix/
-    rir_dir: /kaggle/input/nbss-data/NBSS/dataset/rir_cfg_4
+    rir_dir: /kaggle/input/nbss-data/implementation_for_Kaggle/dataset
     speech_overlap_ratio:
     - 0.1
     - 1.0
@@ -54,7 +54,7 @@ data:
     batch_size:
     - 2
     - 4
-    speaker_num: 2
+    speaker_num: 5
     audio_time_len:
     - nmix 4
     - nmix 4
