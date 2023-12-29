@@ -28,7 +28,7 @@ class NBSS(nn.Module):
     def __init__(
             self,
             n_channel: int = 8,
-            n_speaker: int = 2,
+            n_speaker: int = 5,
             n_fft: int = 512,
             n_overlap: int = 256,
             ref_channel: int = 0,
@@ -101,20 +101,20 @@ class NBSS(nn.Module):
 
 if __name__ == '__main__':
     x = torch.randn(size=(10, 8, 16000))
-    ys = torch.randn(size=(10, 2, 16000))
+    ys = torch.randn(size=(10, 5, 16000))
 
-    NBSS_with_NB_BLSTM = NBSS(n_channel=8, n_speaker=2, arch="NB_BLSTM")
+    NBSS_with_NB_BLSTM = NBSS(n_channel=8, n_speaker=5, arch="NB_BLSTM")
     ys_hat = NBSS_with_NB_BLSTM(x)
     neg_sisdr_loss, best_perm = pit(preds=ys_hat, target=ys, metric_func=neg_si_sdr, eval_func='min')
     print(ys_hat.shape, neg_sisdr_loss.mean())
 
-    NBSS_with_NBC = NBSS(n_channel=8, n_speaker=2, arch="NBC")
+    NBSS_with_NBC = NBSS(n_channel=8, n_speaker=5, arch="NBC")
     ys_hat = NBSS_with_NBC(x)
     neg_sisdr_loss, best_perm = pit(preds=ys_hat, target=ys, metric_func=neg_si_sdr, eval_func='min')
     print(ys_hat.shape, neg_sisdr_loss.mean())
 
     NBSS_with_NBC_small = NBSS(n_channel=8,
-                               n_speaker=2,
+                               n_speaker=5,
                                arch="NBC2",
                                arch_kwargs={
                                    "n_layers": 8, # 12 for large

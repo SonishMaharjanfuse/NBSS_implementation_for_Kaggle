@@ -291,7 +291,7 @@ class NBC(nn.Module):
 
 
 if __name__ == '__main__':
-    Batch, Freq, Time, Chn, Spk = 1, 257, 100, 8, 2
+    Batch, Freq, Time, Chn, Spk = 1, 257, 100, 8, 5
     x = torch.randn((Batch * Freq, Time, Chn * 2))
     m = NBC(input_size=Chn * 2, output_size=Spk * 2, n_layers=4)
     y = m(x)

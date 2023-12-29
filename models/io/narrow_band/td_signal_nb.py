@@ -36,7 +36,7 @@ class TimeDomainSignalNB(STFTCoefficientNB):
     """time domain signal IO
     """
 
-    def __init__(self, ft_len: int, ft_overlap: int, ref_chn_idx: int = 0, spk_num: int = 2, loss_func: Callable = neg_si_sdr, loss_name=None) -> None:
+    def __init__(self, ft_len: int, ft_overlap: int, ref_chn_idx: int = 0, spk_num: int = 5, loss_func: Callable = neg_si_sdr, loss_name=None) -> None:
         """init
 
         Args:

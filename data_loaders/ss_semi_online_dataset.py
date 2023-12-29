@@ -54,7 +54,7 @@ class SS_SemiOnlineDataset(Dataset):
             sample_rate: sample rate. if specified, signals will be downsampled or upsampled.
         """
         self.speaker_num = len(speeches)
-        assert self.speaker_num == 2, f"Only support two speaker cases, now it's {self.speaker_num} speakers"
+        assert self.speaker_num == 5, f"Only support two speaker cases, now it's {self.speaker_num} speakers"
 
         self.speeches = speeches
         self.rirs = rirs
@@ -62,6 +62,8 @@ class SS_SemiOnlineDataset(Dataset):
         self.audio_time_len = audio_time_len
         self.speech_overlap_ratio = speech_overlap_ratio
         self.sample_rate = sample_rate
+        # print("??????????????????????????")
+        # print(self.rirs)
 
         # construct a mapping: (index, spk) -> the index of next uttr of the same spk
         self.uttr_next = [[-1 for utt in range(len(self.speeches[spk]))] for spk in range(self.speaker_num)]
@@ -210,6 +212,7 @@ class SS_SemiOnlineDataset(Dataset):
             # search pad from index+1
             speaker_this = self.speeches[i][sidx]['speaker']
             idx = sidx
+            print(len(clean), needed_lens[i])
             while len(clean) < needed_lens[i]:
                 if self.uttr_next[i][idx] < 0:
                     idx_old = idx
@@ -244,12 +247,17 @@ class SS_SemiOnlineDataset(Dataset):
         chn_num = rir.shape[1]
         echoics = np.zeros((self.speaker_num, chn_num, mix_frame_len))
         for i, y in enumerate(cleans):
+            # print("_++++++++++",i,y,"++++++++++++")
+            # print(rir, rir.shape)
             start = None  # type: ignore
             for ch in range(chn_num):
                 if len(y) == 0:  # ignore y if needed_lens[i] == 0, i.e. len(y) == 0
                     continue
-                echoic_i = convolve(y, rir[i, ch, :])
-                other = 1 - i  # i=1, other=0; i=0, other=1
+                k = i % 2
+                echoic_i = convolve(y, rir[k, ch, :])
+                other = 1 - k  # i=1, other=0; i=0, other=1
+                # print(mix_frame_len)
+                # print(needed_lens[0],needed_lens[1],needed_lens[2],needed_lens[3],needed_lens[4])
                 if needed_lens[other] == mix_frame_len:  # if other speech is full of the length
                     if start == None:  # use the same start for all the channels of one speaker
                         start = randint(g, low=0, high=mix_frame_len - needed_lens[i] + 1)  # [0, mix_frame_len - needed_lens[i]]
@@ -260,7 +268,13 @@ class SS_SemiOnlineDataset(Dataset):
                     echoics[i, ch, start:start + needed_lens[i]] = echoic_i[:needed_lens[i]]  # type: ignore
                 elif i == 0:  # speaker 1
                     echoics[i, ch, :needed_lens[i]] = echoic_i[:needed_lens[i]]
-                else:  # speaker 2
+                # elif i == 1:  # speaker 2
+                #     echoics[i, ch, -needed_lens[i]:] = echoic_i[:needed_lens[i]]
+                # elif i == 2:  # speaker 3
+                #     echoics[i, ch, :needed_lens[i]] = echoic_i[:needed_lens[i]]
+                # elif i == 3:  # speaker 4
+                #     echoics[i, ch, -needed_lens[i]:] = echoic_i[:needed_lens[i]]
+                else:  # speaker 5
                     echoics[i, ch, -needed_lens[i]:] = echoic_i[:needed_lens[i]]
         mix = np.sum(echoics, axis=0)
 

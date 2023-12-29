@@ -24,7 +24,7 @@ class STFTCoefficientNB(NBIO):
     """STFT coefficients IO
     """
 
-    size_per_spk: int = 2
+    size_per_spk: int = 5
 
     def __init__(self, ft_len: int, ft_overlap: int, ref_chn_idx: int, spk_num: int, loss_func: Callable = mse_stft, loss_name=None) -> None:
         """init
